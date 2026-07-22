@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="박성우 · RENT A HERO Z 전투 클라이언트 엔지니어 포트폴리오">
+<style>*{margin:0;padding:0}</style>
+</head>
+<body>
+<title>박성우 · RentAHero Z 전투 클라이언트 엔지니어 포트폴리오</title>
+<style>
+:root{
+  --ground:#0d1014; --surface:#14181e; --surface-2:#1a2029; --raise:#1f2731;
+  --line:#28313c; --line-soft:#1d242d;
+  --ink:#e7ecf2; --ink-dim:#8a97a6; --ink-faint:#5b6675;
+  --accent:#ffb627; --accent-deep:#e0870f; --accent-ink:#ffc24d; --accent-glow:rgba(255,182,39,.13);
+  --c-fix:#f0685e; --c-feat:#56b7e8; --c-refactor:#b693ee; --c-perf:#5bc98c; --c-chore:#66727f;
+  --combat:#ffb627; --content:#56b7e8; --infra:#b693ee; --platform:#5bc98c;
+  --shadow:0 1px 0 rgba(255,255,255,.02),0 18px 40px -24px rgba(0,0,0,.7);
+  --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code",Consolas,"Liberation Mono",monospace;
+  --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+  --maxw:1080px;
+}
+@media (prefers-color-scheme:light){
+  :root{
+    --ground:#f3f4f1; --surface:#ffffff; --surface-2:#eceee9; --raise:#f7f8f5;
+    --line:#dcdfd8; --line-soft:#e6e8e2;
+    --ink:#171b20; --ink-dim:#55606e; --ink-faint:#8a94a1;
+    --accent:#c47a08; --accent-deep:#a6650a; --accent-ink:#a6650a; --accent-glow:rgba(196,122,8,.10);
+    --c-fix:#cf4237; --c-feat:#1f82b8; --c-refactor:#7f52c9; --c-perf:#2f9c63; --c-chore:#7a8590;
+    --combat:#c47a08; --content:#1f82b8; --infra:#7f52c9; --platform:#2f9c63;
+    --shadow:0 1px 0 rgba(0,0,0,.02),0 14px 34px -22px rgba(20,24,30,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0d1014; --surface:#14181e; --surface-2:#1a2029; --raise:#1f2731;
+  --line:#28313c; --line-soft:#1d242d;
+  --ink:#e7ecf2; --ink-dim:#8a97a6; --ink-faint:#5b6675;
+  --accent:#ffb627; --accent-deep:#e0870f; --accent-ink:#ffc24d; --accent-glow:rgba(255,182,39,.13);
+  --c-fix:#f0685e; --c-feat:#56b7e8; --c-refactor:#b693ee; --c-perf:#5bc98c; --c-chore:#66727f;
+  --combat:#ffb627; --content:#56b7e8; --infra:#b693ee; --platform:#5bc98c;
+  --shadow:0 1px 0 rgba(255,255,255,.02),0 18px 40px -24px rgba(0,0,0,.7);
+}
+:root[data-theme="light"]{
+  --ground:#f3f4f1; --surface:#ffffff; --surface-2:#eceee9; --raise:#f7f8f5;
+  --line:#dcdfd8; --line-soft:#e6e8e2;
+  --ink:#171b20; --ink-dim:#55606e; --ink-faint:#8a94a1;
+  --accent:#c47a08; --accent-deep:#a6650a; --accent-ink:#a6650a; --accent-glow:rgba(196,122,8,.10);
+  --c-fix:#cf4237; --c-feat:#1f82b8; --c-refactor:#7f52c9; --c-perf:#2f9c63; --c-chore:#7a8590;
+  --combat:#c47a08; --content:#1f82b8; --infra:#7f52c9; --platform:#2f9c63;
+  --shadow:0 1px 0 rgba(0,0,0,.02),0 14px 34px -22px rgba(20,24,30,.35);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+  line-height:1.62;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(18px,5vw,40px);}
+section{padding:clamp(48px,7vw,86px) 0;border-top:1px solid var(--line-soft);}
+h2{font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:750;letter-spacing:-.01em;margin:0;text-wrap:balance;}
+p{margin:0}
+a{color:var(--accent-ink);text-decoration:none}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--ink-faint);display:flex;align-items:center;gap:10px;}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--accent);opacity:.8}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+
+.toggle{position:fixed;top:14px;right:14px;z-index:50;font-family:var(--mono);font-size:.68rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim);background:var(--surface);
+  border:1px solid var(--line);border-radius:999px;padding:7px 13px;cursor:pointer;display:flex;gap:7px;align-items:center}
+.toggle:hover{color:var(--ink);border-color:var(--accent)}
+.toggle .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+
+.idstrip{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-bottom:24px;font-family:var(--mono);font-size:.78rem}
+.idstrip .idname{color:var(--ink);font-weight:700;font-size:.98rem;letter-spacing:.02em}
+.idstrip .idrole{color:var(--ink-dim)}
+.idstrip .idyears{color:var(--accent-ink);border:1px solid color-mix(in srgb,var(--accent) 42%,transparent);
+  background:color-mix(in srgb,var(--accent) 10%,transparent);border-radius:999px;padding:2px 9px;font-size:.68rem}
+.idstrip .sp{flex:1 1 12px}
+.idstrip .idlink{color:var(--ink-dim);border:1px solid var(--line);border-radius:6px;padding:3px 10px;
+  display:inline-flex;gap:7px;align-items:center;background:var(--surface)}
+.idstrip .idlink:hover{color:var(--ink);border-color:var(--accent)}
+
+.hero{position:relative;overflow:hidden;border-top:none;padding-top:clamp(64px,10vw,120px);}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(120% 90% at 82% -10%,var(--accent-glow),transparent 55%),
+    repeating-linear-gradient(0deg,transparent 0 39px,var(--line-soft) 39px 40px),
+    repeating-linear-gradient(90deg,transparent 0 39px,var(--line-soft) 39px 40px);
+  mask-image:linear-gradient(180deg,#000 0%,#000 55%,transparent 100%);opacity:.55}
+.hero .wrap{position:relative;z-index:1}
+.boot{font-family:var(--mono);font-size:.74rem;color:var(--ink-dim);letter-spacing:.04em;
+  display:flex;flex-wrap:wrap;gap:6px 18px;margin-bottom:26px}
+.boot b{color:var(--accent-ink);font-weight:600}
+.title{font-family:var(--mono);font-weight:700;line-height:1.02;letter-spacing:-.02em;
+  font-size:clamp(2rem,6vw,3.9rem);margin:0 0 4px;max-width:20ch}
+.title .z{color:var(--accent)}
+.subtitle{font-size:clamp(1.02rem,2vw,1.28rem);color:var(--ink);font-weight:600;margin-top:16px;max-width:34ch;text-wrap:balance}
+.lede{margin-top:20px;max-width:60ch;color:var(--ink-dim);font-size:1rem}
+.lede b{color:var(--ink);font-weight:650}
+.rolebar{margin-top:18px;max-width:62ch;background:var(--surface);border:1px solid var(--line);
+  border-left:3px solid var(--accent);border-radius:8px;padding:13px 16px;font-size:.93rem;color:var(--ink-dim);line-height:1.55}
+.rolebar b{color:var(--accent-ink);font-weight:700}
+.rolebar em{font-style:normal;color:var(--ink);font-weight:600}
+.cursor{display:inline-block;width:.6em;height:1.05em;background:var(--accent);vertical-align:-.15em;
+  margin-left:2px;animation:blink 1.1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+
+.tiles{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:30px}
+.tile{background:var(--surface);padding:18px 16px;display:flex;flex-direction:column;gap:3px}
+.tile .n{font-family:var(--mono);font-size:clamp(1.4rem,2.6vw,1.95rem);font-weight:700;letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;color:var(--ink)}
+.tile .n .u{font-size:.62em;color:var(--ink-dim);font-weight:500;margin-left:2px}
+.tile .k{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint)}
+.tile.hl .n{color:var(--accent)}
+@media(max-width:820px){.tiles{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:440px){.tiles{grid-template-columns:repeat(2,1fr)}}
+
+.compo{margin-top:26px}
+.compo .bar{display:flex;height:12px;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.compo .bar span{display:block;height:100%}
+.compo .legend{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;font-family:var(--mono);font-size:.72rem;color:var(--ink-dim)}
+.compo .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.compo .legend b{color:var(--ink);font-weight:600}
+
+.shead{display:flex;flex-direction:column;gap:14px;margin-bottom:34px;max-width:66ch}
+.shead p{color:var(--ink-dim)}
+
+.cases{display:flex;flex-direction:column;gap:16px}
+.case{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  padding:20px 22px 20px 26px;box-shadow:var(--shadow);transition:border-color .2s,transform .2s}
+.case::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:3px;background:var(--sev,var(--c-fix))}
+.case:hover{border-color:var(--sev,var(--accent));transform:translateY(-2px)}
+.case-top{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-bottom:14px}
+.sev-tag{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+  color:var(--sev);border:1px solid color-mix(in srgb,var(--sev) 45%,transparent);
+  background:color-mix(in srgb,var(--sev) 12%,transparent);padding:3px 8px;border-radius:5px}
+.case-sys{font-size:.86rem;color:var(--ink-dim);font-weight:600}
+.case-verified{margin-left:auto;font-family:var(--mono);font-size:.7rem;color:var(--ink-faint);
+  display:inline-flex;gap:6px;align-items:center}
+.case-verified::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--c-perf)}
+.symptom{font-size:1.08rem;font-weight:650;line-height:1.45;letter-spacing:-.01em;color:var(--ink);text-wrap:balance}
+.rc{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;margin-top:16px}
+.rc dt{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-faint);padding-top:3px;white-space:nowrap}
+.rc dd{margin:0;color:var(--ink-dim);font-size:.94rem;line-height:1.58}
+.rc dd.fix{color:var(--ink)}
+.rc dd b,.rc dd code{font-family:var(--mono);font-size:.86em;background:var(--surface-2);
+  border:1px solid var(--line);border-radius:4px;padding:.5px 5px;color:var(--accent-ink);font-weight:600}
+@media(max-width:560px){.rc{grid-template-columns:1fr;gap:3px 0}.rc dt{padding-top:10px}.case-verified{margin-left:0}}
+
+.archs{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:720px){.archs{grid-template-columns:1fr}}
+.arch{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:10px;transition:border-color .2s}
+.arch:hover{border-color:color-mix(in srgb,var(--infra) 55%,var(--line))}
+.arch-h{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.arch-h .ax{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;font-weight:700;color:var(--infra);
+  border:1px solid color-mix(in srgb,var(--infra) 45%,transparent);background:color-mix(in srgb,var(--infra) 12%,transparent);padding:3px 7px;border-radius:5px}
+.arch-h h3{margin:0;font-size:1.02rem;font-weight:750;letter-spacing:-.01em;line-height:1.35;flex:1 1 auto}
+.arch>p{color:var(--ink-dim);font-size:.9rem;margin:0;line-height:1.55}
+.arch-ev{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px}
+.arch-ev li{position:relative;padding-left:16px;font-size:.86rem;color:var(--ink-dim);line-height:1.5}
+.arch-ev li::before{content:"—";position:absolute;left:0;color:var(--infra)}
+.arch-ev b{color:var(--ink);font-weight:650}
+
+.built{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(max-width:700px){.built{grid-template-columns:1fr}}
+.bi{display:flex;gap:11px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);
+  border-radius:10px;padding:13px 15px;transition:border-color .2s}
+.bi:hover{border-color:color-mix(in srgb,var(--dom) 55%,var(--line))}
+.bi .dot{width:8px;height:8px;border-radius:50%;background:var(--dom);margin-top:6px;flex:none;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--dom) 16%,transparent)}
+.bi b{display:block;font-size:.92rem;color:var(--ink);font-weight:700;margin-bottom:2px;letter-spacing:-.01em}
+.bi span{font-size:.82rem;color:var(--ink-dim);line-height:1.45}
+
+.maps{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.map{display:grid;grid-template-columns:1fr 20px 1fr;gap:14px;align-items:center;padding:13px 18px;border-bottom:1px solid var(--line-soft)}
+.map:last-child{border-bottom:none}
+.map:hover{background:var(--surface-2)}
+.map .mine{font-size:.88rem;color:var(--ink);line-height:1.45}
+.map .arrow{font-family:var(--mono);color:var(--accent);font-size:.85rem;text-align:center}
+.map .ue{font-family:var(--mono);font-size:.8rem;color:var(--c-perf);line-height:1.45}
+.map-h{display:grid;grid-template-columns:1fr 20px 1fr;gap:14px;padding:10px 18px;background:var(--surface-2);
+  border-bottom:1px solid var(--line);font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint)}
+.map-h .u2{color:var(--c-perf)}
+@media(max-width:640px){
+  .map,.map-h{grid-template-columns:1fr;gap:3px}
+  .map .arrow,.map-h span:nth-child(2){display:none}
+  .map .ue::before{content:"→ "}
+}
+.cpp{margin-top:16px;background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--c-feat);border-radius:10px;padding:20px 22px}
+.cpp h3{margin:0 0 6px;font-size:1.02rem;font-weight:750}
+.cpp>p{margin:0 0 14px;color:var(--ink-dim);font-size:.9rem}
+.cpp ul{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:9px 20px}
+@media(max-width:680px){.cpp ul{grid-template-columns:1fr}}
+.cpp li{position:relative;padding-left:16px;font-size:.87rem;color:var(--ink-dim);line-height:1.5}
+.cpp li::before{content:"▹";position:absolute;left:0;color:var(--c-feat)}
+.cpp b{color:var(--ink);font-weight:650}
+.map-note{margin-top:12px;font-family:var(--mono);font-size:.7rem;color:var(--ink-faint)}
+
+.strengths{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.str{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px}
+.str h3{margin:0 0 8px;font-size:1.02rem;font-weight:700;display:flex;align-items:center;gap:10px}
+.str h3 .ix{font-family:var(--mono);font-size:.8rem;color:var(--accent);font-weight:600}
+.str p{color:var(--ink-dim);font-size:.92rem}
+@media(max-width:640px){.strengths{grid-template-columns:1fr}}
+
+.legend-dom{display:flex;flex-wrap:wrap;gap:8px 18px;margin-bottom:26px;font-family:var(--mono);font-size:.72rem;color:var(--ink-dim)}
+.legend-dom i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:-1px}
+.systems{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.sys{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 20px 18px;
+  display:flex;flex-direction:column;gap:12px;transition:border-color .2s,transform .2s}
+.sys:hover{border-color:color-mix(in srgb,var(--dom) 55%,var(--line));transform:translateY(-2px)}
+.sys-h{display:flex;align-items:flex-start;gap:11px}
+.sys-h .marker{width:9px;height:9px;border-radius:50%;background:var(--dom);margin-top:7px;flex:none;
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--dom) 18%,transparent)}
+.sys-h h3{margin:0;font-size:1.06rem;font-weight:700;letter-spacing:-.01em;line-height:1.3}
+.sys-desc{color:var(--ink-dim);font-size:.9rem;margin:0;min-height:2.5em}
+.gauge{margin-top:2px}
+.gauge-top{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--mono);font-size:.7rem;color:var(--ink-faint);letter-spacing:.06em}
+.gauge-top b{color:var(--ink);font-weight:600;font-size:.92rem}
+.gauge-track{height:6px;background:var(--surface-2);border-radius:4px;overflow:hidden;margin-top:5px;border:1px solid var(--line-soft)}
+.gauge-fill{height:100%;width:0;background:linear-gradient(90deg,color-mix(in srgb,var(--dom) 60%,transparent),var(--dom));
+  border-radius:4px;transition:width 1.1s cubic-bezier(.22,1,.36,1)}
+.sys-meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--mono);font-size:.7rem;color:var(--ink-faint)}
+.sys-meta b{color:var(--ink-dim);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:2px}
+.chip{font-family:var(--mono);font-size:.67rem;color:var(--ink-dim);background:var(--surface-2);
+  border:1px solid var(--line);border-radius:5px;padding:2px 7px;white-space:nowrap}
+@media(max-width:680px){.systems{grid-template-columns:1fr}.sys-desc{min-height:0}}
+
+.own{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin-top:26px}
+.own h3{margin:0 0 14px;font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-faint);font-weight:600}
+.own-row{display:grid;grid-template-columns:1fr auto;gap:9px 14px;align-items:center}
+.own-row .fname{font-size:.9rem;color:var(--ink)}
+.own-row .fbar{grid-column:1/-1;height:5px;background:var(--surface-2);border-radius:3px;overflow:hidden;margin-bottom:5px}
+.own-row .fbar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent-deep),var(--accent));transition:width 1s ease}
+.own-row .cnt{font-family:var(--mono);font-size:.8rem;color:var(--ink-dim);font-variant-numeric:tabular-nums}
+
+.arc{position:relative;padding-left:24px;margin-top:8px}
+.arc::before{content:"";position:absolute;left:5px;top:8px;bottom:8px;width:2px;background:linear-gradient(180deg,var(--accent),color-mix(in srgb,var(--accent) 20%,var(--line)))}
+.phase{position:relative;padding:0 0 24px 10px}
+.phase:last-child{padding-bottom:0}
+.phase::before{content:"";position:absolute;left:-24px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--ground);border:2px solid var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+.phase .pd{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;color:var(--accent-ink);display:flex;gap:8px 12px;align-items:baseline;flex-wrap:wrap}
+.phase .pd .cc{color:var(--ink-faint);font-variant-numeric:tabular-nums}
+.phase h3{margin:7px 0 5px;font-size:1.08rem;font-weight:750;letter-spacing:-.01em}
+.phase .ph-head{color:var(--ink-dim);font-size:.93rem;line-height:1.55;margin:0 0 12px;max-width:72ch}
+.phase .ph-items{display:flex;flex-wrap:wrap;gap:6px}
+.phase .ph-items .chip.found{color:var(--accent-ink);border-color:color-mix(in srgb,var(--accent) 40%,transparent);background:color-mix(in srgb,var(--accent) 9%,transparent);font-weight:600}
+
+.yearchart{margin:0 0 40px}
+.yc-cap{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;color:var(--ink-faint);display:flex;justify-content:space-between;margin-bottom:10px}
+.yc-bars{display:flex;align-items:flex-end;gap:2px;height:132px}
+.yc-bars .bar{flex:1 1 0;min-width:0;border-radius:2px 2px 0 0;background:var(--bc);align-self:flex-end;transition:height .9s cubic-bezier(.22,1,.36,1)}
+.yc-bars .bar:hover{filter:brightness(1.3)}
+.yc-axis{display:flex;gap:2px;margin-top:9px}
+.yc-year{padding-top:8px;border-top:2px solid var(--bc);display:flex;flex-direction:column;gap:2px;font-family:var(--mono);min-width:0}
+.yc-year .yy{font-size:.82rem;font-weight:700;color:var(--ink)}
+.yc-year .yn{font-size:.72rem;color:var(--ink-dim);font-variant-numeric:tabular-nums}
+.yc-year .yp{font-size:.65rem;color:var(--ink-faint);letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yc-plot{position:relative;padding-top:42px}
+.yc-bars{position:relative;z-index:1}
+.yc-crunch{position:absolute;top:42px;bottom:0;background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 15%,transparent),transparent 88%);border-left:1px dashed color-mix(in srgb,var(--accent) 45%,transparent);border-right:1px dashed color-mix(in srgb,var(--accent) 45%,transparent);pointer-events:none;z-index:0}
+.yc-crunch b{position:absolute;top:-38px;left:50%;transform:translateX(-50%);white-space:nowrap;font-family:var(--mono);font-size:.63rem;letter-spacing:.06em;color:var(--accent-ink);font-weight:600}
+.yc-launch{position:absolute;top:42px;bottom:0;width:0;border-left:2px solid var(--accent);z-index:3;pointer-events:none}
+.yc-launch b{position:absolute;top:-18px;left:-4px;transform:translateX(-100%);white-space:nowrap;font-family:var(--mono);font-size:.64rem;font-weight:700;color:var(--accent-ink);background:var(--surface);border:1px solid var(--accent);padding:2px 6px;border-radius:4px}
+
+.study{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:clamp(18px,3vw,26px);box-shadow:var(--shadow);margin-bottom:18px}
+.study-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;margin-bottom:10px}
+.study-h .ix{font-family:var(--mono);color:var(--accent);font-size:.72rem;letter-spacing:.16em}
+.study-h h3{margin:0;font-size:clamp(1.05rem,2vw,1.2rem);font-weight:750;letter-spacing:-.01em;flex:1 1 240px;line-height:1.35}
+.study-sum{color:var(--ink);font-weight:650;font-size:1rem;margin:0 0 12px;text-wrap:balance}
+.study-txt{color:var(--ink-dim);font-size:.93rem;line-height:1.6;margin:0 0 18px;max-width:74ch}
+.study-txt b{color:var(--ink);font-weight:650}
+.diff{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:760px){.diff{grid-template-columns:1fr}}
+.col-h{font-family:var(--mono);font-size:.67rem;letter-spacing:.12em;text-transform:uppercase;padding:0 2px 7px;font-weight:600}
+.before-h{color:var(--c-fix)} .after-h{color:var(--c-perf)}
+.before-h::before,.after-h::before{content:"● ";font-size:.7em;vertical-align:1px}
+.code{margin:0;font-family:var(--mono);font-size:.75rem;line-height:1.7;color:var(--ink);white-space:pre;
+  background:var(--surface-2);border:1px solid var(--line);border-radius:9px;padding:14px 16px;overflow-x:auto;border-left:3px solid var(--line)}
+.code.before{border-left-color:var(--c-fix)}
+.code.after{border-left-color:var(--c-perf)}
+.code .cmt{color:var(--ink-faint)}
+.code .hl{color:var(--accent-ink);font-weight:600}
+.study-take{margin:18px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+.study-take li{position:relative;padding-left:22px;color:var(--ink-dim);font-size:.92rem;line-height:1.55}
+.study-take li::before{content:"▸";position:absolute;left:2px;color:var(--accent)}
+.study-take b{color:var(--ink);font-weight:650}
+.study-note{margin-top:16px;font-family:var(--mono);font-size:.72rem;color:var(--ink-faint)}
+.anon{font-family:var(--mono);font-size:.72rem;color:var(--ink-faint);margin-top:6px}
+
+footer{border-top:1px solid var(--line);padding:40px 0 60px;color:var(--ink-faint)}
+.method{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:10px;padding:18px 22px;font-size:.9rem;color:var(--ink-dim);max-width:72ch}
+.method b{color:var(--ink)}
+.foot-meta{margin-top:24px;font-family:var(--mono);font-size:.74rem;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 20px}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .gauge-fill,.own-row .fbar span{transition:none!important}
+}
+</style>
+
+<button class="toggle" id="themeToggle" aria-label="테마 전환"><span class="dot"></span><span id="tglabel">THEME</span></button>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="idstrip">
+      <span class="idname">박성우</span>
+      <span class="idrole">클라이언트 프로그래머 · 전투/게임플레이</span>
+      <span class="idyears">4~5년차</span>
+      <span class="sp"></span>
+      <a class="idlink" href="mailto:thost3507@gmail.com"><span aria-hidden="true">✉</span><span>thost3507@gmail.com</span></a>
+      <a class="idlink" href="https://play.google.com/store/apps/details?id=com.linenext.rhz.aos" target="_blank" rel="noopener"><span aria-hidden="true">▶</span><span>출시작 보기 (Google Play)</span></a>
+    </div>
+    <div class="boot mono">
+      <span>git <b>parksw</b></span>
+      <span>2024-03 → 2026-07</span>
+      <span><b>7,612</b> commits</span>
+      <span>사내 코드 보호를 위해 <b style="color:var(--c-perf)">코드 익명화</b></span>
+    </div>
+    <h1 class="title mono">RENT A HERO&nbsp;<span class="z">Z</span></h1>
+    <p class="subtitle">증상이 아니라 <span style="color:var(--accent-ink)">원인과 구조</span>를 고치는 게임 클라이언트 프로그래머 — 서버권위 액션RPG 전투 코어 오너</p>
+    <p class="lede">세가(SEGA) 원작 IP를 라이선스해 <b>LINE NEXT가 퍼블리싱</b>하는 Unity&nbsp;6 URP 액션 RPG <b>〈RENT A HERO Z〉</b>를
+      <b>착수 첫날(2024-03)부터 소프트런칭(2026-06-18 · 캐나다/인도/호주)까지</b> 28개월 · 571 활동일 동안 구축.
+      성장 루프·데이터 파이프라인·게임모드 아키텍처부터 전투 코어까지 <b>처음부터 끝까지(A→Z) 오너십</b>으로 만들며,
+      재현 어려운 근본 버그를 원인까지 파고들어 <b>구조적으로 해결</b>하고 모바일 성능을 최적화했습니다.<span class="cursor" aria-hidden="true"></span></p>
+
+    <p class="rolebar"><b>주력 클라이언트 1~2인 체제.</b> 동료가 <em>네 차례 교체</em>되는 동안(중간엔 혼자였던 기간도 있음)
+      <em>29개월 전 기간을 관통한 유일한 클라이언트 개발자</em>로서 배틀·유닛·스킬·몬스터·시나리오 코어를 연속해서 책임졌습니다.</p>
+
+    <div class="tiles" role="list">
+      <div class="tile hl" role="listitem"><div class="n">7,612</div><div class="k">work commits</div></div>
+      <div class="tile" role="listitem"><div class="n">571<span class="u">일</span></div><div class="k">active days</div></div>
+      <div class="tile" role="listitem"><div class="n">28<span class="u">개월</span></div><div class="k">span</div></div>
+      <div class="tile" role="listitem"><div class="n">16</div><div class="k">systems owned</div></div>
+      <div class="tile" role="listitem"><div class="n">94</div><div class="k">bugs → fixed</div></div>
+      <div class="tile" role="listitem"><div class="n">87</div><div class="k">refactors</div></div>
+    </div>
+
+    <div class="compo" aria-label="규약 커밋 타입 구성">
+      <div class="bar" id="compoBar"></div>
+      <div class="legend">
+        <span><i style="background:var(--c-fix)"></i>fix <b>687</b></span>
+        <span><i style="background:var(--c-feat)"></i>feat <b>294</b></span>
+        <span><i style="background:var(--c-chore)"></i>chore <b>178</b></span>
+        <span><i style="background:var(--c-refactor)"></i>refactor <b>125</b></span>
+        <span><i style="background:var(--c-perf)"></i>perf <b>119</b></span>
+        <span style="color:var(--ink-faint)">— 규약 커밋 1,403건 기준 (머지 제외)</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="built">
+  <div class="wrap">
+    <div class="shead">
+      <span class="eyebrow">What I built · 만든 것들</span>
+      <h2>전투 코어부터 에디터 툴·빌드 파이프라인까지</h2>
+      <p>한 프로젝트 안에서 제가 직접 만든 것들입니다. 전투만 판 게 아니라, <b style="color:var(--ink)">팀이 굴러가는 데 필요한 것</b>을 필요할 때 만들었습니다.</p>
+    </div>
+    <div class="legend-dom" aria-label="도메인 범례">
+      <span><i style="background:var(--combat)"></i>전투</span>
+      <span><i style="background:var(--content)"></i>콘텐츠·툴</span>
+      <span><i style="background:var(--infra)"></i>인프라</span>
+      <span><i style="background:var(--platform)"></i>플랫폼</span>
+    </div>
+    <div class="built" id="builtList"></div>
+  </div>
+</section>
+
+<section id="arc">
+  <div class="wrap">
+    <div class="shead">
+      <span class="eyebrow">Project arc · 착수부터 소프트런칭까지</span>
+      <h2>프로젝트 첫날부터 소프트런칭까지</h2>
+      <p>2024년 3월 착수 첫 커밋부터 참여해 성장 루프·데이터 파이프라인·게임모드 아키텍처·전투 코어를 <b style="color:var(--ink)">직접 세우고(⚑ 기반 구축)</b> 2026년 6월 소프트런칭까지 끌고 왔습니다.</p>
+    </div>
+    <div class="yearchart">
+      <div class="yc-cap"><span>월별 커밋 · 2024-03 → 2026-07</span><span>2026 상반기 출시 크런치 · 피크 804/월</span></div>
+      <div class="yc-plot">
+        <div class="yc-crunch" id="ycCrunch"><b>출시 크런치</b></div>
+        <div class="yc-launch" id="ycLaunch"><b>🚀 소프트런칭 6/18</b></div>
+        <div class="yc-bars" id="ycBars"></div>
+      </div>
+      <div class="yc-axis" id="ycAxis"></div>
+    </div>
+    <div class="arc" id="arcList"></div>
+  </div>
+</section>
+
+<section id="cases">
+  <div class="wrap">
+    <div class="shead">
+      <span class="eyebrow">Root-cause forensics · 대표 결함 리포트</span>
+      <h2>증상이 아니라 원인을 고칩니다</h2>
+      <p>땜질이 아닌 <b style="color:var(--ink)">구조적 해결</b>을 지향합니다. 아래는 실제 해결한 대표 근본 버그들 —
+        사내 코드라 <b style="color:var(--ink)">실제 이름·코드는 가렸지만</b>, 어떻게 원인을 찾고 구조로 풀었는지는 그대로 담았습니다.</p>
+    </div>
+    <div class="cases" id="caseList"></div>
+  </div>
+</section>
+
+<section id="deep">
+  <div class="wrap">
+    <div class="shead">
+      <span class="eyebrow">Deep case study · 구조로 보는 증명</span>
+      <h2>서술이 아니라 구조로</h2>
+      <p>대표 3건을 <b style="color:var(--ink)">before / after 구조</b>와 설계 판단까지 펼칩니다. 코드는 실제 사례를 <b style="color:var(--ink)">익명 의사코드</b>로 재구성한 것입니다(사내 이름·로직 비노출).</p>
+    </div>
+
+    <article class="study">
+      <div class="study-h">
+        <span class="ix">CASE 01</span>
+        <h3>반복 적용되는 광역 스킬의 데미지가 매 틱 1로 붕괴하던 참조 공유(aliasing) 버그</h3>
+      </div>
+      <p class="study-sum">참조 타입 <span class="mono">데미지 패킷</span>을 매 틱 재사용하는 틱 스킬에서, 내부의 in-place 감산이 호출처 캐시를 영구 오염시켜 데미지가 1로 붕괴.</p>
+      <p class="study-txt">단발 스킬은 멀쩡한데 틱 스킬만 터진다 — 차이는 <b>패킷 객체의 수명</b>이었다. 틱 스킬은 GC를 아끼려 하나의 패킷을 캐시해 재사용하는데, 그건 참조 타입이라 피격 처리부의 방어 감산이 <b>캐시 객체 자체</b>를 깎는다(aliasing). 개별 처리부를 각각 고치는 대신, 모든 피격이 지나는 <b>단일 진입점</b>에서 원본을 스냅샷하고 <span class="mono">finally</span>로 원복해 불변식을 강제했다.</p>
+      <div class="diff">
+        <div>
+          <div class="col-h before-h">Before · 문제</div>
+<pre class="code before"><span class="cmt">// 피격 처리 진입점 — 각 캐릭터가 직접 구현(가상)</span>
+abstract bool ApplyHit(DamagePacket p);
+
+<span class="cmt">// 내부에서 방어·실드 계산으로 p.Amount 를 그 자리에서 감산</span>
+<span class="cmt">// 틱 스킬은 하나의 패킷을 매 틱 재사용(참조 타입)</span>
+<span class="hl">//  → 감산이 캐시에 누적: 100→40→16→ … →1(붕괴)</span></pre>
+        </div>
+        <div>
+          <div class="col-h after-h">After · 수정</div>
+<pre class="code after"><span class="cmt">// 모든 피격이 지나는 단일 진입점(비가상 래퍼)</span>
+bool ApplyHit(DamagePacket p)
+{
+    <span class="hl">var original = p.Amount;</span>        <span class="cmt">// 값 스냅샷(할당 0)</span>
+    try     { return ApplyHitCore(p); } <span class="cmt">// 내부는 자유 변형</span>
+    <span class="hl">finally { p.Amount = original; }</span>  <span class="cmt">// 항상 원복</span>
+}
+abstract bool ApplyHitCore(DamagePacket p);</pre>
+        </div>
+      </div>
+      <ul class="study-take">
+        <li><b>근본 vs 증상</b> — 호출처마다 복제(GC 폭증)가 아니라 진입점 한 곳에서 불변식을 강제 → 이후 모든 틱 스킬이 자동으로 안전.</li>
+        <li><b>제로 GC</b> — 복원을 위해 값 하나만 스냅샷, 모바일 GC 예산 존중.</li>
+        <li><b>계약 명문화</b> — 내부 처리부에 "값을 변형해도 됨"을 문서화해 미래 구현자가 오염을 걱정할 필요 없음.</li>
+      </ul>
+      <p class="anon">※ 실제 클래스/필드명은 익명화 · 구조 동일</p>
+    </article>
+
+    <article class="study">
+      <div class="study-h">
+        <span class="ix">CASE 02</span>
+        <h3>궁극기 평타 버프의 StackOverflow — 무한 재귀를 다형성으로 구조 제거</h3>
+      </div>
+      <p class="study-sum">버프 '배율'을 반환해야 할 함수가 '최종 데미지 계산'을 반환해 데미지 파이프라인을 재진입 → 특정 궁극기 발동 후 평타 시 무한 재귀 크래시.</p>
+      <p class="study-txt">유사 궁극기들이 멀쩡했던 건 발동 중 평타가 잠겨 <b>버그 경로에 진입조차 못 했기 때문</b> — 버그는 전부에 있었다. 한 궁극기만 발동 중 공격이 가능해 드러났다. 해결은 재귀를 '고치기'가 아니라 <b>'불가능하게' 만드는 것</b>: 버프 계산을 각 궁극기가 소유하되 <b>순수 배율만 허용(파이프라인 재진입 금지)</b>하는 다형 계약으로 전환했다.</p>
+      <div class="diff">
+        <div>
+          <div class="col-h before-h">Before · 문제</div>
+<pre class="code before"><span class="cmt">// 특정 궁극기 — 배율 대신 '최종 데미지 계산'을 반환</span>
+double GetAttackBuff() {
+    <span class="hl">if (inWindow) return ComputeFinalDamage();</span> <span class="cmt">// ★재귀근원</span>
+    return 1;
+}
+<span class="cmt">// 평타 계산 — 종류를 문자열로 분기해 위를 호출</span>
+dmg *= container.GetAttackBuff(type);
+<span class="hl cmt">// → GetAttackBuff → ComputeFinalDamage → (버프 재조회) → ∞</span></pre>
+        </div>
+        <div>
+          <div class="col-h after-h">After · 수정</div>
+<pre class="code after"><span class="cmt">// 궁극기 베이스 — 순수 배율 계약(재진입 금지)</span>
+virtual double ModifyDamage(double baseDmg)
+    =&gt; providesBuff &amp;&amp; inWindow
+        ? baseDmg * (1 + rate)   <span class="cmt">// 데이터만 사용</span>
+        : baseDmg;
+
+<span class="cmt">// 개별 궁극기 — 의도만 선언</span>
+<span class="hl">override bool providesBuff =&gt; true;</span>
+
+<span class="cmt">// 평타 계산 — 문자열 분기 제거, 위임 한 줄</span>
+dmg = container.ModifyDamage(dmg);</pre>
+        </div>
+      </div>
+      <ul class="study-take">
+        <li><b>재발 불가 설계</b> — 계약을 '데이터만 쓰는 순수 배율'로 좁히면 파이프라인 재진입이 곧 계약 위반, 같은 버그가 재발할 수 없음.</li>
+        <li><b>OCP(개방-폐쇄)</b> — 신규 궁극기는 의도 플래그만 override, <b>중앙 코드 0 수정</b> (과거엔 문자열 분기·매핑 수정 필요).</li>
+        <li><b>부수 효과</b> — 이전 dead path였던 버프가 실제 작동 + 코드 55줄 순감.</li>
+      </ul>
+      <p class="anon">※ 실제 클래스/메서드명은 익명화 · 구조 동일 · 설계 문서 동반</p>
+    </article>
+
+    <article class="study">
+      <div class="study-h">
+        <span class="ix">CASE 03</span>
+        <h3>라이브 패치를 반복할수록 번들 메모리가 누적되던 핸들 누수</h3>
+      </div>
+      <p class="study-sum">에셋 다운로드 핸들이 완료·취소·예외 어느 경로에서도 해제되지 않아, 패치 사이클마다 번들이 메모리에 영구 누적되고 카탈로그 스왑 충돌을 유발.</p>
+      <p class="study-txt">메모리에 남은 번들은 패치 때마다 하나씩 늘었다. 진행률 폴링 루프의 <b>탈출 경로(취소 return·정상 완료·예외)</b> 어디에서도 <span class="mono">Release</span>를 부르지 않은 게 원인. 결정적 단서는 <b>형제 API는 이미 해제 중</b>이었다는 것 — 규칙은 있었고 이 경로만 빠진 일관성 결함이었다. <span class="mono">try/finally</span>로 전 경로 해제를 보장하고, 다음에 또 안 겪도록 진단 로그까지 붙였다.</p>
+      <div class="diff">
+        <div>
+          <div class="col-h before-h">Before · 문제</div>
+<pre class="code before">var handle = LoadBundlesAsync(labels);
+while (!handle.IsDone)
+{
+    <span class="hl">if (cancelled) return;</span>   <span class="cmt">// 해제 없이 이탈</span>
+    report(progress);
+    await Yield();
+}
+<span class="cmt">// 완료해도 Release 없음</span>
+<span class="hl cmt">// → 번들 영구 잔류: 패치마다 누적 + 스왑 충돌</span></pre>
+        </div>
+        <div>
+          <div class="col-h after-h">After · 수정</div>
+<pre class="code after">var handle = LoadBundlesAsync(labels);
+try
+{
+    while (!handle.IsDone)
+    {
+        if (cancelled) return;   <span class="cmt">// finally가 보장</span>
+        await Yield();
+    }
+}
+finally
+{
+    <span class="cmt">// 완료·취소·예외 전 경로 해제(디스크 캐시 유지)</span>
+    <span class="hl">if (handle.IsValid()) Release(handle);</span>
+}</pre>
+        </div>
+      </div>
+      <ul class="study-take">
+        <li><b>일관성 관점의 디버깅</b> — "형제 API는 지키는데 이 경로만 안 지킨다"는 패턴 인식으로 근본을 특정, 새 방식 발명이 아닌 <b>계약 복원</b>.</li>
+        <li><b>재다운로드 아닌 재로드</b> — 핸들만 해제하고 디스크 캐시는 유지 → 사용자 요금·대기 없이 메모리만 회수.</li>
+        <li><b>관측성까지</b> — 진단 로그를 해시 번들명 → <b>대표 에셋 경로</b>로 바꿔 다음 누수의 출처를 즉시 식별.</li>
+      </ul>
+      <p class="anon">※ 엔진 공개 API 외 실제 식별자는 익명화 · 구조 동일</p>
+    </article>
+  </div>
+</section>
+
+<section id="arch">
+  <div class="wrap">
+    <div class="shead">
+      <span class="eyebrow">Architecture · 설계와 구조</span>
+      <h2>고친 것만큼, 어떻게 지었는지</h2>
+      <p>버그를 잡는 것만큼 구조를 어떻게 짜느냐가 중요하다고 생각합니다. 아래는 제가 반복해서 지키는 설계 원칙과, 실제로 그렇게 다시 지은 사례입니다.</p>
+    </div>
+    <div class="archs" id="archList"></div>
+  </div>
+</section>
+
+<section id="engine">
+  <div class="wrap">
+    <div class="shead">
+      <span class="eyebrow">Engine-agnostic · 엔진을 타지 않는 것</span>
+      <h2>Unity로 만들었지만, 엔진에 묶이지 않습니다</h2>
+      <p>제가 실제로 다룬 문제와 설계는 대부분 엔진 종속이 아닙니다. 아래는 제가 설계·구현한 것과 Unreal에서의 대응 개념입니다.</p>
+    </div>
+    <div class="maps">
+      <div class="map-h"><span>제가 설계·구현한 것</span><span></span><span class="u2">Unreal 대응 개념</span></div>
+      <div id="mapList"></div>
+    </div>
+    <p class="map-note">※ 구현 경험은 Unity 기준입니다. 위는 개념·설계 차원의 대응 관계입니다.</p>
+
+    <div class="cpp">
+      <h3>C++로 옮겨도 통하는 사고</h3>
+      <p>C# 환경이었지만, 실제로 부딪히고 해결한 문제는 C++ 엔지니어가 다루는 것과 같은 종류였습니다.</p>
+      <ul id="cppList"></ul>
+    </div>
+  </div>
+</section>
+
+<section id="systems">
+  <div class="wrap">
+    <div class="shead">
+      <span class="eyebrow">System ownership · 16 clusters</span>
+      <h2>담당·구축한 시스템</h2>
+      <p>제가 담당해 구축·유지한 시스템들입니다. 게이지는 관련 커밋 규모, 기간은 실제 개발 구간입니다(다수가 2024 착수부터 — 위 여정 참조).</p>
+    </div>
+    <div class="legend-dom" aria-label="도메인 범례">
+      <span><i style="background:var(--combat)"></i>전투 Combat</span>
+      <span><i style="background:var(--content)"></i>콘텐츠 Content</span>
+      <span><i style="background:var(--infra)"></i>인프라 Infra</span>
+      <span><i style="background:var(--platform)"></i>플랫폼 Platform</span>
+    </div>
+    <div class="systems" id="sysList"></div>
+
+    <div class="own">
+      <h3>핵심 코드 오너십 — 시스템별 편집 커밋 수 (본인 단독)</h3>
+      <div id="ownList"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="method">이 포트폴리오는 제가 이 프로젝트에서 <b>직접 작업한 부분만</b> 시스템별로 정리한 것입니다.
+      <b>사내 프로젝트라 실제 코드·클래스/변수명·파일 경로는 공개하지 않고</b>, 문제를 어떻게 구조로 풀었는지에 집중했습니다.
+      실제 코드와 커밋 이력은 면접에서 보여드리겠습니다.</p>
+    <div class="foot-meta">
+      <span>RENT A HERO Z · SEGA 원작 IP × LINE NEXT 퍼블리싱 · 개발 TheJaemi</span>
+      <span>2026-06-18 소프트런칭 (캐나다 · 인도 · 호주)</span>
+      <span>Unity 6 · URP · Android/iOS · server-authoritative</span>
+      <span>© 2026 박성우</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const MONTHS=[
+ ["2024-03",63],["2024-04",117],["2024-05",116],["2024-06",96],["2024-07",133],["2024-08",47],
+ ["2024-09",64],["2024-10",197],["2024-11",230],["2024-12",269],
+ ["2025-01",239],["2025-02",448],["2025-03",285],["2025-04",174],["2025-05",286],["2025-06",272],
+ ["2025-07",215],["2025-08",114],["2025-09",334],["2025-10",386],["2025-11",178],["2025-12",78],
+ ["2026-01",292],["2026-02",311],["2026-03",466],["2026-04",576],["2026-05",662],["2026-06",804],["2026-07",160]
+];
+const YEARS=[
+ {y:"2024",total:1332,phase:"착수 · 코어 골격",bc:"var(--c-refactor)"},
+ {y:"2025",total:3009,phase:"확장 · 심화",bc:"var(--c-feat)"},
+ {y:"2026",total:3271,phase:"출시 크런치 · 6/18 소프트런칭",bc:"var(--accent)"}
+];
+const maxN=Math.max(...MONTHS.map(x=>x[1]));
+const ycColor=y=>YEARS.find(Y=>Y.y===y).bc;
+document.getElementById("ycBars").innerHTML=MONTHS.map(([m,n])=>
+ `<div class="bar" style="--bc:${ycColor(m.slice(0,4))};height:0" data-h="${(n/maxN*100).toFixed(1)}" title="${m} · ${n} commits"></div>`).join("");
+document.getElementById("ycAxis").innerHTML=YEARS.map(Y=>{
+ const cnt=MONTHS.filter(([m])=>m.slice(0,4)===Y.y).length;
+ return `<div class="yc-year" style="--bc:${Y.bc};flex:${cnt}">
+   <span class="yy">${Y.y}</span><span class="yn">${Y.total.toLocaleString()} commits</span><span class="yp">${Y.phase}</span>
+ </div>`;
+}).join("");
+requestAnimationFrame(()=>document.querySelectorAll("#ycBars .bar").forEach(b=>{b.style.height=b.dataset.h+"%"}));
+(function(){
+  const Nm=MONTHS.length, idxM=m=>MONTHS.findIndex(x=>x[0]===m);
+  const cs=idxM("2026-03"), ce=idxM("2026-06");      // 출시 크런치 구간
+  const cr=document.getElementById("ycCrunch");
+  cr.style.left=(cs/Nm*100).toFixed(2)+"%"; cr.style.width=((ce-cs+1)/Nm*100).toFixed(2)+"%";
+  const li=idxM("2026-06");                            // 소프트런칭 2026-06-18 → 6월 바의 18/30 지점
+  document.getElementById("ycLaunch").style.left=(((li+18/30)/Nm)*100).toFixed(2)+"%";
+})();
+
+const PHASES=[
+ {period:"2024 상반기 · 착수",cc:392,title:"성장 루프 + 전투 골격을 맨바닥에서",
+  head:"장비·가챠·상점·훈련/특성 성장 루프부터 전투 유닛·스킬·인카운터까지, 코어 게임플레이 골격을 처음부터 세운 착수기.",
+  found:["장비/인벤토리 시스템 최초 구축","스테이지 중간저장 구조 확립","훈련·특성(퍽) 성장 시스템 골격","NPC 대화 시스템 뼈대"],
+  items:["가챠/상점","유닛 컨트롤러(대시·콤보·타겟팅)","발사체·장판 스킬","인카운터/전투 진행","퀘스트"]},
+ {period:"2024 하반기 · 코어 골격",cc:936,title:"게임모드 프레임워크 · 데이터 파이프라인 · 몬스터 FSM",
+  head:"클라이언트 코어의 최초 골격을 직접 세운 시기 — 전 게임모드와 데이터 흐름의 기반이 여기서 만들어졌다.",
+  found:["Excel→ScriptableObject 데이터 파이프라인 최초 구축","Addressable 오브젝트 풀 도입","사운드 매니저 구축","게임모드 프레임워크(튜토리얼/퍼즐/배틀/런)"],
+  items:["몬스터 FSM(상태별 partial 분리)","속성/엘리멘탈 시스템","스킬 대개편(패시브/액티브·드론)","Prop 시스템","서버 연동 기반(API 체계)"]},
+ {period:"2025 상반기 · 확장",cc:1704,title:"스킬 전면 구현 + 게임모드 아키텍처 정립",
+  head:"기반 위에 스킬 수십 종과 신규 모드·배틀패스·챌린지를 얹고, 전역 싱글톤을 걷어내 게임모드를 아키텍처로 정립.",
+  found:["게임모드 아키텍처 정립(전역 싱글톤 제거 → 모드 베이스 추상화)","스킬 자동생성 파이프라인","튜토리얼 데이터 파이프라인","챌린지→Task 서버 모듈"],
+  items:["스킬 수십 종(드론·필살기·대시)","튜토리얼 챕터 1~3","인카운터 NPC 다수","배달 모드","배틀패스·인앱 결제"]},
+ {period:"2025 하반기 · 심화·재구조화",cc:1281,title:"State 패턴 · 캐릭터 공통 베이스로 흐름 아키텍처 전환",
+  head:"신규 콘텐츠를 대량 투입하면서, 게임 흐름 아키텍처를 State 머신·공통 베이스로 전면 재구조화한 반년.",
+  found:["게임 흐름 아키텍처 재설계(State 머신 코어 + Game/Battle FSM)","캐릭터 공통 베이스 통합(유닛/몬스터/조우/동물)","State 패턴 마이그레이션(레거시 비주얼스크립팅·인스펙터 제거)","타운 모드 골격"],
+  items:["레이드 보스·요일 던전","히어로 모듈 시스템","시나리오 챕터 1~5","퍼즐 맵 에디터","UI 통합 마이그레이션"]},
+ {period:"2026 · 출시 준비 → 소프트런칭(6/18)",cc:3271,title:"근본 버그 · 최적화 · 라이브 서비스 안정성",
+  head:"전투 코어를 심화하고, 재현 어려운 근본 버그를 구조로 해결하며 모바일 성능과 라이브 안정성을 끌어올린 시기.",
+  found:["데미지 파이프라인·궁극기 다형 계약 재설계","대규모 군중 AI 단일 관리자(SSOT)","라이브 패치 안정성(핸들 누수·번들 언로드)"],
+  items:["스태거→처형 피니셔","공간분할 성능 최적화","글로벌 로케일 대응","in-process 리셋","빌드 파이프라인"]}
+];
+const CASES=[
+ {sys:"몬스터 & AI",sev:"var(--c-refactor)",type:"concurrency",symptom:"대규모 군중 전투에서 공격자가 폭주(6~7마리 동시)하고 대기 몬스터가 stuck·정착 실패",cause:"5개 위치 권한 로직이 매 프레임 충돌하며 등록 전 각자 공격 허가를 판단 → 정원 초과 허가, ID 재정렬로 자리 진동.",fix:"<b>단일 관리자(SSOT)</b>를 신설해 프레임당 1회 배치(예산 기반 최근접 채움 + 위치인식 고정 자리). 죽은 코드 200여 줄 제거.",v:"실기 회귀 해결"},
+ {sys:"다이얼로그 / 시나리오",sev:"var(--c-refactor)",type:"async-concurrency",symptom:"두 대화 플로우가 동시 진입하면 공용 대화 팝업을 하이재킹, 서로의 await가 뒤섞여 대화 붕괴",cause:"공용 팝업이 단일 인스턴스인데 다수 호출부가 <code>async void</code>/fire-and-forget로 서로를 await하지 않음. 비동기 라이브러리가 실행 컨텍스트를 전파하지 않아 암묵 직렬화도 불안정.",fix:"진입점에서 명시 획득하는 <b>FIFO 세션 게이트</b>(using 스코프). 세션 내부 호출은 게이트 미접촉 → 재진입 데드락 불가, 미변환 플로우 <b>점진 적용 안전</b>.",v:"동시성 설계"},
+ {sys:"로컬라이제이션",sev:"var(--c-perf)",type:"global-launch",symptom:"소수점 구분자가 ','인 기기(독/프 등)에서 '0.8''1.5' 파싱 시 크래시 또는 값 왜곡(1.5→15)",cause:"전역 문화권이 기기 로케일을 따라가 숫자 파싱이 '.'을 천단위로 해석 — 문자열로 저작된 데이터와 어긋남.",fix:"앱 진입 즉시 <b>InvariantCulture를 전역 고정</b>(메인/기본 스레드), 파싱 유틸로 호출부를 일원화해 이중 안전.",v:"글로벌 출시 차단 이슈"},
+ {sys:"퍼즐",sev:"var(--c-fix)",type:"infinite-loop",symptom:"절차적 미로 진입 시 메인 스레드가 통째로 freeze(무한 루프)",cause:"그리디 경로 탐색 루프가 X/Y 다음 칸이 모두 벽이면 위치를 갱신하지 못해 영구 루프. 손맵에선 미발현하다 절차적 미로 벽 구조가 <b>잠복 버그</b>를 노출.",fix:"루프 전 위치를 기록해 진전이 없으면 탈출, 셀 수 상한 가드로 이중 안전망(거동 보존).",v:"알고리즘 결함"},
+ {sys:"UI / 씬 / 타이틀",sev:"var(--c-fix)",type:"native-crash",symptom:"특정 안드로이드 기기에서 인트로 비디오 종료 시 네이티브 null-deref 크래시",cause:"엔진 내부 이미지 리더(AImageReader) teardown 레이스 — 비디오 정지/파괴와 프레임 버퍼 릴리스가 동시 진행되며 파괴된 리더 접근(엔진 버그).",fix:"정지 시퀀스를 프레임 양보를 끼워 <b>직렬화</b>하고, 씬 전환 전 teardown 완료를 대기해 레이스 창을 축소.",v:"실기 크래시(엔진 방어)"}
+];
+const ARCH=[
+ {tag:"SSOT",t:"단일 소유로 권한 충돌을 없앤다",
+  d:"여러 곳이 같은 상태를 각자 판단하면 정합성 버그는 반드시 재발합니다. 판단 주체를 하나로 모아 프레임당 한 번만 결정하도록 다시 지었습니다.",
+  ev:["군중 배치: 5개 권한이 매 프레임 충돌 → 단일 관리자, 죽은 코드 <b>216줄 제거</b>","웨이브 스폰 재개: 흩어진 판정 → 단일 권한자 게이트로 불변식 보장","추격·사거리 산수: <b>3개 파일 산재 → 단일 소스</b>(불변식 보존)","표시와 판정을 하나의 계약으로 — <b>'그린 것 = 맞는 것'</b> 보장"]},
+ {tag:"CONTRACT",t:"계약을 좁혀 재발을 불가능하게",
+  d:"고치는 데서 끝내지 않고, 같은 실수가 애초에 나올 수 없도록 계약 자체를 좁힙니다.",
+  ev:["궁극기 버프: 중앙 분기 → <b>'순수 배율만 허용'</b> 다형 계약 → 파이프라인 재진입 자체가 불가","신규 궁극기 추가 시 <b>중앙 코드 0 수정</b> (OCP)","피격 진입점: 스냅샷 → 복원 계약으로 캐시 오염 원천 차단"]},
+ {tag:"DRY",t:"중복은 베이스로 접는다",
+  d:"복붙된 구현은 버그도 복제됩니다. 공통 베이스로 접으면서 숨어 있던 결함까지 함께 걷어냈습니다.",
+  ev:["드론 스킬 7종 → 제네릭 베이스: <b>약 770 LOC 감소</b> (통합 중 복붙 버그 발견·수정)","모드 상태머신 → 템플릿 메서드 베이스: 중복 방어 로직 <b>약 120 LOC 제거</b>","광역 틱 <b>5개 경로 → zero-alloc 타이머 struct 하나</b>로 통합"]},
+ {tag:"DECOUPLE",t:"전역 접근을 걷어내고 의존을 뒤집는다",
+  d:"전역 싱글톤과 엔진 의존을 걷어내야 테스트할 수 있고, 추론할 수 있는 코드가 됩니다.",
+  ev:["서비스 로케이터 → 생성자 주입: 소비처 <b>약 38곳의 의존 방향 역전</b>","맵 생성기를 <b>엔진 의존 0의 순수 로직</b>으로 분리 → 결정론·테스트 가능","스킬 모디파이어를 별도 어셈블리로 추출해 컴파일 커플링 분리"]},
+ {tag:"SAFE",t:"큰 구조 변경일수록 되돌릴 수 있게",
+  d:"대규모 리팩터링은 '결과가 같음'을 검증하고, 구 코드는 실기 검증이 끝날 때까지 남겨둡니다.",
+  ev:["구 코어를 <b>무수정 보존한 채 신규 코어로 병행 포팅</b> → 검증 후 삭제","<b>behavior-preserving</b> 원칙으로 동작 불변을 근거와 함께 확인","2단계 마이그레이션·센티널 폴백으로 <b>미전환 경로 무변화</b> 보장"]},
+ {tag:"EXTEND",t:"확장점은 미리, 단 리스크 없이",
+  d:"지금 안 쓰는 기능도 나중에 열 수 있게 두되, 현재 코드에는 영향이 0이도록 격리합니다.",
+  ev:["진영 축을 종류와 분리 → 미사용 시 <b>전체 코드 휴면</b>, 대전 확장점 확보","<b>외부 7개 시스템 무수정</b>으로 절차적 생성 주입(직렬화·공개 API 보존)","모드별로 흩어진 입장 정책을 상위 추상으로 통합"]}
+];
+const BUILT=[
+ {d:"combat",t:"실시간 전투 코어",s:"폼별 공격·콤보·궁극기, 데미지 파이프라인, 일시정지 일관성"},
+ {d:"combat",t:"몬스터 AI · 대규모 군중 전투",s:"행동트리 AI, 1 대 다수 포메이션, 텔레그래프 판정"},
+ {d:"combat",t:"스태거 → 처형 피니셔",s:"무력화 게이지 누적, 홀드 처형 연출, 보스 페이즈 전환"},
+ {d:"combat",t:"스킬 시스템",s:"액티브/패시브·궁극기·폼 전환/진화, 전투 FX 파이프라인"},
+ {d:"content",t:"기획자용 시나리오 저작 툴",s:"2D 맵 에디터 · 3D 프리뷰 · 타임라인 · 트리거 저작"},
+ {d:"content",t:"절차적 맵 생성",s:"펄린 노이즈 시드 결정론 → 셀·벽·스폰 도출 + 비동기 내비메시"},
+ {d:"content",t:"절차적 IK 로봇팔",s:"FABRIK 다관절 촉수 콤보 — 애니 클립 없이 런타임 생성"},
+ {d:"content",t:"퍼즐 모드 + 맵 에디터",s:"스와이프 그리드 이동, 절차 미로, 컨텍스트 주입 재작성"},
+ {d:"content",t:"콘텐츠 모드 3종",s:"레이드 보스 · 러시 · 호위 운반 — 독립 상태머신"},
+ {d:"content",t:"메타 성장 루프",s:"장비·가챠·상점·훈련/특성 트리 (2024 착수기 구축)"},
+ {d:"infra",t:"데이터 파이프라인",s:"스프레드시트 → 데이터 자산 변환 + 코드 자동 생성"},
+ {d:"infra",t:"에셋 번들 · 패치 인프라",s:"스트리밍·핸들 수명·아틀라스·풀링 전략"},
+ {d:"infra",t:"CI 빌드 파이프라인",s:"오프라인/하이브리드 빌드 모드, 배치 빌드 CLI 안정화"},
+ {d:"infra",t:"in-process 리셋",s:"프로세스 재시작 없이 앱을 초기 상태로 — 계정 전환·로그아웃"},
+ {d:"infra",t:"입력 · 카메라",s:"터치 드래그·키보드·게임패드 + 시네마틱 카메라 연출"},
+ {d:"platform",t:"글로벌 로케일 안전",s:"콤마-소수점 로케일 크래시·값 왜곡 전역 방어"}
+];
+const MAPS=[
+ {mine:"BT(행동트리) 기반 몬스터·유닛 AI — 추격/공격/카이팅 상태, 틱레이트 제어",ue:"Behavior Tree / Blackboard"},
+ {mine:"스킬·궁극기·모디파이어·버프·쿨다운을 데이터 주도로 묶은 어빌리티 시스템",ue:"Gameplay Ability System (GAS)"},
+ {mine:"루트모션 공격, 애니메이션 이벤트 키프레임 기반 히트 판정·연출 동기",ue:"AnimMontage / AnimNotify"},
+ {mine:"FABRIK IK 절차적 다관절 팔 직접 구현 (세그먼트 wave propagation)",ue:"FABRIK 노드 (엔진 내장)"},
+ {mine:"물리 레이어 충돌 매트릭스·솔버 튜닝, Trigger 궤적 기반 히트 판정",ue:"Chaos / Collision Channel"},
+ {mine:"서버권위 클라이언트 — 상태 정합성, 소켓 재접속, 무손실 큐",ue:"Replication / RPC"},
+ {mine:"에셋 번들 스트리밍 — 핸들 수명·메모리 누수·카탈로그 패치",ue:"Asset Manager / Asset Streaming"},
+ {mine:"스프레드시트 → 데이터 자산 파이프라인 (코드 생성 포함)",ue:"DataTable / DataAsset"},
+ {mine:"경로탐색·군중 회피(RVO), 절차적 맵의 비동기 내비메시 리빌드",ue:"Navigation System / NavMesh"},
+ {mine:"CI 배치 빌드 — 환경 define 분기·서명·콘텐츠 패치 파이프라인",ue:"UAT / BuildGraph"}
+];
+const CPPT=[
+ "<b>참조 별칭(aliasing) 진단</b> — 공유 참조가 호출처를 오염시키는 고전적 함정을 실제로 찾아 구조로 봉인",
+ "<b>스코프 기반 복원 = RAII 사고</b> — 진입 시 스냅샷, 이탈 시(예외 포함) 무조건 복원",
+ "<b>핸들 수명 계약</b> — 획득한 자원을 완료·취소·예외 전 경로에서 해제 보장 (스마트 포인터와 같은 문제의식)",
+ "<b>zero-alloc 지향</b> — 힙 할당을 피하는 값 타입(struct) 설계와 재사용 버퍼",
+ "<b>오브젝트 풀 오염·수명 버그</b> — 반환된 객체의 역참조를 추적해 근본 해결",
+ "<b>네이티브 리소스 누수</b> — 관리 밖 자원(소켓·번들)의 해제 경로를 설계로 보장"
+];
+const SYS=[
+ {t:"배틀 / 전투 코어",d:"폼별 공격·콤보·궁극기, 데미지 파이프라인, 진영 시스템, 일시정지 일관성",c:161,b:8,span:"2024-03~2026-07",dom:"combat",tech:["UniTask","Strategy/Template","공간분할 그리드","zero-alloc 타이머"]},
+ {t:"스킬 시스템",d:"액티브/패시브 스킬·궁극기·폼 전환/진화·전투 FX 파이프라인",c:112,b:6,span:"2024-06~2026-07",dom:"combat",tech:["다형 궁극기","오브젝트 풀","CancellationToken","asmdef 모듈"]},
+ {t:"몬스터 & AI",d:"BT 기반 AI·대규모 군중 포메이션(1 대 다수)·텔레그래프 판정·카이팅 전투",c:41,b:6,span:"2024-03~2026-07",dom:"combat",tech:["Behavior Tree","NavMesh/RVO","Root Motion","공간분할 그리드"]},
+ {t:"스태거 → 처형 피니셔",d:"스태거 게이지 누적 → 무력화 → 홀드 처형 피니셔 + 보스 페이즈 전환",c:15,b:6,span:"2026-07",dom:"combat",tech:["SO 튜너블","Animator FSM","#if DEV 게이트","일시정지 타이머"]},
+ {t:"다이얼로그 / 시나리오 툴",d:"공용 대화 런타임 + 기획자용 시나리오 저작 툴체인",c:150,b:6,span:"2024-04~26",dom:"content",tech:["세션 게이트","Linked CTS","EditorWindow 툴","이벤트 버스"]},
+ {t:"Addressable / Atlas 인프라",d:"번들 파이프라인·SpriteAtlas·풀링 전략·씬 로딩 에셋 인프라",c:60,b:6,span:"2026-04~07",dom:"infra",tech:["Addressables","Content Update","SpriteAtlas V2","오브젝트 풀"]},
+ {t:"엔드콘텐츠 모드 (레이드/러시/호위)",d:"레이드 보스·러시·호위 운반 3종 독립 게임 모드 상태머신",c:24,b:5,span:"2026-04~06",dom:"content",tech:["상태머신 흐름","서버 정산","진입 정책","UniTask"]},
+ {t:"타운 시스템",d:"타운 진입/복귀 상태머신·NPC·미니게임·연출 권한(refcount)",c:31,b:8,span:"2026-04~07",dom:"content",tech:["proto3","refcount 권한","상태머신","소켓 동기화"]},
+ {t:"퍼즐",d:"스와이프 그리드 퍼즐 — 서비스로케이터→컨텍스트 주입 전면 재작성",c:20,b:5,span:"2024-08~26",dom:"content",tech:["의존성 주입(DI)","FSM","시드 결정론","무중단 포팅"]},
+ {t:"랜덤맵 / 절차적 생성",d:"펄린 노이즈 시드 결정론 절차적 맵 생성 파이프라인",c:16,b:6,span:"2026-04~06",dom:"content",tech:["Perlin 노이즈","비동기 NavMesh","순수 로직 분리","셰이더 호환"]},
+ {t:"물리 / 로봇암",d:"FABRIK IK 절차적 로봇팔 + PhysX 충돌 매트릭스 최적화",c:12,b:5,span:"2026-04~06",dom:"content",tech:["FABRIK IK","PhysX 레이어 매트릭스","Collider Trigger","Kinematic RB"]},
+ {t:"빌드 / 릴리즈 파이프라인",d:"에셋 빌드 모드(오프라인/하이브리드)·CI 빌드 CLI 안정화",c:12,b:5,span:"2026-04~06",dom:"infra",tech:["Addressables 프로필","SBP BuildCache","Jenkins batchmode","인메모리 오버라이드"]},
+ {t:"리셋 / 데일리 사이클",d:"프로세스 재시작 없는 in-process 리셋 + 데일리 리셋",c:17,b:6,span:"2026-05~06",dom:"infra",tech:["카탈로그 스왑","리셋 토큰 래치","오브젝트 풀","이벤트 구독형 정리"]},
+ {t:"UI / 씬 / 타이틀",d:"타이틀 인트로·씬 전환·로딩 파이프라인·배틀 HUD 안정화",c:35,b:5,span:"2026-04~07",dom:"infra",tech:["인트로 상태머신","teardown 직렬화","로딩 진행 SSOT","오브젝트 풀"]},
+ {t:"인풋 / 카메라",d:"멀티플랫폼 입력(터치/KB/패드) + Cinemachine 카메라 연출",c:30,b:7,span:"2026-04~06",dom:"infra",tech:["Input System","Cinemachine","입력 차단 게이트","sticky 오토에임"]},
+ {t:"로컬라이제이션",d:"콤마-소수점 로케일 크래시 전역 방어(전역 컬처 고정)",c:6,b:4,span:"2026-07",dom:"platform",tech:["InvariantCulture","전역 컬처 고정","파싱 유틸","zero-alloc"]}
+];
+const OWN=[
+ {f:"유닛 제어 코어",n:681},{f:"배틀 오케스트레이터",n:461},{f:"몬스터 제어 코어",n:461},
+ {f:"스킬 시스템",n:261},{f:"시나리오 처리",n:165},{f:"플레이어 컨트롤러",n:162}
+];
+const MAXC=Math.max(...SYS.map(s=>s.c));
+const MAXO=OWN[0].n;
+
+const compo=[["--c-fix",687],["--c-feat",294],["--c-chore",178],["--c-refactor",125],["--c-perf",119]];
+const tot=compo.reduce((a,x)=>a+x[1],0);
+document.getElementById("compoBar").innerHTML=compo.map(([c,v])=>
+  `<span style="width:${(v/tot*100).toFixed(2)}%;background:var(${c})"></span>`).join("");
+
+document.getElementById("arcList").innerHTML=PHASES.map(p=>`
+ <div class="phase">
+   <div class="pd"><span>${p.period}</span><span class="cc">· ${p.cc.toLocaleString()} commits</span></div>
+   <h3>${p.title}</h3>
+   <p class="ph-head">${p.head}</p>
+   <div class="ph-items">${p.found.map(f=>`<span class="chip found">⚑ ${f}</span>`).join("")}${p.items.map(i=>`<span class="chip">${i}</span>`).join("")}</div>
+ </div>`).join("");
+
+document.getElementById("caseList").innerHTML=CASES.map(c=>`
+ <article class="case" style="--sev:${c.sev}">
+   <div class="case-top">
+     <span class="sev-tag">${c.type}</span>
+     <span class="case-sys">${c.sys}</span>
+     <span class="case-verified">${c.v}</span>
+   </div>
+   <p class="symptom">${c.symptom}</p>
+   <dl class="rc">
+     <dt>원인</dt><dd>${c.cause}</dd>
+     <dt>해결</dt><dd class="fix">${c.fix}</dd>
+   </dl>
+ </article>`).join("");
+
+document.getElementById("archList").innerHTML=ARCH.map(a=>`
+ <article class="arch">
+   <div class="arch-h"><span class="ax">${a.tag}</span><h3>${a.t}</h3></div>
+   <p>${a.d}</p>
+   <ul class="arch-ev">${a.ev.map(e=>`<li>${e}</li>`).join("")}</ul>
+ </article>`).join("");
+
+document.getElementById("builtList").innerHTML=BUILT.map(b=>`
+ <div class="bi" style="--dom:var(--${b.d})">
+   <span class="dot"></span><span><b>${b.t}</b><span>${b.s}</span></span>
+ </div>`).join("");
+
+document.getElementById("mapList").innerHTML=MAPS.map(m=>`
+ <div class="map">
+   <span class="mine">${m.mine}</span><span class="arrow">→</span><span class="ue">${m.ue}</span>
+ </div>`).join("");
+document.getElementById("cppList").innerHTML=CPPT.map(c=>`<li>${c}</li>`).join("");
+
+document.getElementById("sysList").innerHTML=SYS.map(s=>`
+ <article class="sys" style="--dom:var(--${s.dom})">
+   <div class="sys-h"><span class="marker"></span><h3>${s.t}</h3></div>
+   <p class="sys-desc">${s.d}</p>
+   <div class="gauge">
+     <div class="gauge-top"><span>COMMIT VOLUME</span><b>${s.c}</b></div>
+     <div class="gauge-track"><span class="gauge-fill" data-w="${Math.max(7,s.c/MAXC*100).toFixed(1)}"></span></div>
+   </div>
+   <div class="sys-meta"><span><b>${s.b}</b> bugs fixed</span><span>${s.span}</span></div>
+   <div class="chips">${s.tech.map(t=>`<span class="chip">${t}</span>`).join("")}</div>
+ </article>`).join("");
+
+document.getElementById("ownList").innerHTML=OWN.map(o=>`
+ <div class="own-row">
+   <span class="fname">${o.f}</span><span class="cnt">${o.n} edits</span>
+   <div class="fbar"><span data-w="${(o.n/MAXO*100).toFixed(1)}"></span></div>
+ </div>`).join("");
+
+const io=new IntersectionObserver((es)=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.style.width=e.target.dataset.w+"%";io.unobserve(e.target)}});
+},{threshold:.3});
+document.querySelectorAll(".gauge-fill,.fbar span").forEach(el=>io.observe(el));
+
+const root=document.documentElement,tg=document.getElementById("themeToggle"),lb=document.getElementById("tglabel");
+function cur(){return root.dataset.theme||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}
+function setLabel(){lb.textContent=cur()==="dark"?"DARK":"LIGHT"}
+setLabel();
+tg.addEventListener("click",()=>{root.dataset.theme=cur()==="dark"?"light":"dark";setLabel()});
+</script>
+
+</body>
+</html>
