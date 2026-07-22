@@ -163,6 +163,9 @@ a{color:var(--accent-ink);text-decoration:none}
 .arch-ev li{position:relative;padding-left:16px;font-size:.86rem;color:var(--ink-dim);line-height:1.5}
 .arch-ev li::before{content:"—";position:absolute;left:0;color:var(--infra)}
 .arch-ev b{color:var(--ink);font-weight:650}
+#mathList .arch-h .ax{color:var(--c-perf);border-color:color-mix(in srgb,var(--c-perf) 45%,transparent);background:color-mix(in srgb,var(--c-perf) 12%,transparent)}
+#mathList .arch-ev li::before{color:var(--c-perf)}
+#mathList .arch:hover{border-color:color-mix(in srgb,var(--c-perf) 55%,var(--line))}
 
 .built{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 @media(max-width:700px){.built{grid-template-columns:1fr}}
@@ -297,6 +300,31 @@ footer{border-top:1px solid var(--line);padding:40px 0 60px;color:var(--ink-fain
   border-radius:10px;padding:18px 22px;font-size:.9rem;color:var(--ink-dim);max-width:72ch}
 .method b{color:var(--ink)}
 .foot-meta{margin-top:24px;font-family:var(--mono);font-size:.74rem;color:var(--ink-faint);display:flex;flex-wrap:wrap;gap:6px 20px}
+
+@media print{
+  @page{margin:12mm}
+  :root{--ground:#ffffff;--surface:#ffffff;--surface-2:#f4f5f7;--line:#d9dde3;--line-soft:#e8eaee;
+    --ink:#15181d;--ink-dim:#3f4650;--ink-faint:#6b7480;
+    --accent:#b3720a;--accent-deep:#8f5c05;--accent-ink:#8f5c05;--accent-glow:rgba(179,114,10,.10);
+    --c-fix:#c0392b;--c-feat:#1f6f96;--c-refactor:#6b45b0;--c-perf:#2f8f57;--c-chore:#6b7480;
+    --combat:#b3720a;--content:#1f6f96;--infra:#6b45b0;--platform:#2f8f57;
+    --shadow:none;}
+  body{background:#fff}
+  .toggle{display:none!important}
+  .hero::before{opacity:.28}
+  .cursor{display:none}
+  section{padding:20px 0!important;border-top:1px solid var(--line-soft)}
+  .hero{padding-top:10px!important}
+  /* 카드·항목이 페이지 중간에서 잘리지 않도록 */
+  .case,.study,.arch,.sys,.str,.tile,.phase,.own,.method,article{break-inside:avoid;page-break-inside:avoid}
+  .shead,h2,h3{break-after:avoid;page-break-after:avoid}
+  .diff{grid-template-columns:1fr 1fr}
+  .code{white-space:pre-wrap;word-break:break-word;font-size:.68rem}
+  /* 배경/그림자 최소화로 잉크 절약하되 색 구분은 유지 */
+  .case,.study,.arch,.sys,.str,.tile,.own{box-shadow:none!important}
+  a{color:var(--accent-ink)!important;text-decoration:none}
+  .gauge-fill,.fbar span,.yc-bars .bar{transition:none!important}
+}
 
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
@@ -550,6 +578,17 @@ finally
   </div>
 </section>
 
+<section id="math">
+  <div class="wrap">
+    <div class="shead">
+      <span class="eyebrow">Math · Physics · Algorithms</span>
+      <h2>기능 뒤에서 실제로 다룬 것</h2>
+      <p>게임플레이 기능은 결국 수학·물리·알고리즘입니다. 아래는 제가 직접 구현하거나 최적화하며 다룬 내용입니다.</p>
+    </div>
+    <div class="archs" id="mathList"></div>
+  </div>
+</section>
+
 <section id="engine">
   <div class="wrap">
     <div class="shead">
@@ -727,6 +766,17 @@ const CPPT=[
  "<b>오브젝트 풀 오염·수명 버그</b> — 반환된 객체의 역참조를 추적해 근본 해결",
  "<b>네이티브 리소스 누수</b> — 관리 밖 자원(소켓·번들)의 해제 경로를 설계로 보장"
 ];
+const MATH=[
+ {tag:"3D MATH",t:"기하 · 벡터 연산",
+  d:"캐릭터 움직임과 판정은 대부분 벡터·각도 계산으로 귀결됩니다. 라이브러리에 맡기지 않고 직접 계산해야 했던 것들입니다.",
+  ev:["<b>FABRIK 역기구학(IK)</b> 직접 구현 — 다관절 팔의 세그먼트 전파 계산, 애니메이션 클립 없이 런타임 생성","<b>위협 중심점 회피</b> — 역거리 가중 평균으로 다수 적의 중심을 구해 카이팅 방향 산출(단일 타겟 기준의 방향 뒤집힘 해소)","<b>진형 배치 오프셋</b> — Grid/Circle/Line 진형의 좌표 생성, 플레이어 위치를 앵커로 예약","<b>텔레그래프 기하 판정</b> — XZ 평면의 부채꼴·원·사각 판정을 표시 도형과 동일 수식으로 통일","<b>3구간 궤적 보간</b> — 순수 정적 함수로 분리하고 위상 비율을 Assert로 검증"]},
+ {tag:"PHYSICS",t:"물리 · 충돌",
+  d:"물리 엔진을 쓰는 것과 물리 비용을 이해하고 조율하는 건 다릅니다.",
+  ev:["<b>PhysX 레이어 충돌 매트릭스 · 솔버 튜닝</b> — 불필요한 충돌 쌍을 제거해 물리 연산 비용 절감","<b>궤적 기반 히트 판정</b> — 사후 OverlapSphere(위치 기반)에서 Collider Trigger(궤적 기반)로 일원화해 연출과 판정 불일치 제거","<b>Kinematic Rigidbody</b> 기반 이동 제어와 루트모션 중 상대 위치 락","<b>NavMesh 제약 위치 제어</b> — 벽 관통 없이 캐릭터 간 간격 고정"]},
+ {tag:"ALGORITHM",t:"자료구조 · 알고리즘 · 최적화",
+  d:"모바일에서 프레임을 지키려면 자료구조 선택이 곧 성능입니다.",
+  ev:["<b>공간분할 그리드(broadphase)</b> — 전체 순회 O(M)를 국소 셀 쿼리로 교체, 재사용 버퍼로 힙 할당 0","<b>BFS 기반 절차 미로 생성</b> — 단일 소스 원칙으로 7모듈 분해, 죽은 알고리즘 2벌 제거","<b>펄린 멀티옥타브 노이즈</b> — 시드 결정론 보장(같은 입력 → 같은 맵), 엔진 의존 0의 순수 로직으로 분리","<b>무한 루프 결함 해결</b> — 그리디 경로 탐색의 진전 없음 조건을 찾아 종료 조건과 상한 가드로 이중 안전망","<b>zero-alloc 자료구조</b> — 분산된 타이머 로직을 힙 할당 0인 struct로 통합"]}
+];
 const SYS=[
  {t:"배틀 / 전투 코어",d:"폼별 공격·콤보·궁극기, 데미지 파이프라인, 진영 시스템, 일시정지 일관성",c:161,b:8,span:"2024-03~2026-07",dom:"combat",tech:["UniTask","Strategy/Template","공간분할 그리드","zero-alloc 타이머"]},
  {t:"스킬 시스템",d:"액티브/패시브 스킬·궁극기·폼 전환/진화·전투 FX 파이프라인",c:112,b:6,span:"2024-06~2026-07",dom:"combat",tech:["다형 궁극기","오브젝트 풀","CancellationToken","asmdef 모듈"]},
@@ -791,6 +841,13 @@ document.getElementById("builtList").innerHTML=BUILT.map(b=>`
    <span class="dot"></span><span><b>${b.t}</b><span>${b.s}</span></span>
  </div>`).join("");
 
+document.getElementById("mathList").innerHTML=MATH.map(a=>`
+ <article class="arch">
+   <div class="arch-h"><span class="ax">${a.tag}</span><h3>${a.t}</h3></div>
+   <p>${a.d}</p>
+   <ul class="arch-ev">${a.ev.map(e=>`<li>${e}</li>`).join("")}</ul>
+ </article>`).join("");
+
 document.getElementById("mapList").innerHTML=MAPS.map(m=>`
  <div class="map">
    <span class="mine">${m.mine}</span><span class="arrow">→</span><span class="ue">${m.ue}</span>
@@ -819,6 +876,12 @@ const io=new IntersectionObserver((es)=>{
   es.forEach(e=>{if(e.isIntersecting){e.target.style.width=e.target.dataset.w+"%";io.unobserve(e.target)}});
 },{threshold:.3});
 document.querySelectorAll(".gauge-fill,.fbar span").forEach(el=>io.observe(el));
+
+// 인쇄(PDF) 직전: 스크롤 여부와 무관하게 모든 게이지·막대를 최종값으로 채움
+window.addEventListener("beforeprint",()=>{
+  document.querySelectorAll(".gauge-fill,.fbar span").forEach(el=>{el.style.width=el.dataset.w+"%"});
+  document.querySelectorAll("#ycBars .bar").forEach(b=>{b.style.height=b.dataset.h+"%"});
+});
 
 const root=document.documentElement,tg=document.getElementById("themeToggle"),lb=document.getElementById("tglabel");
 function cur(){return root.dataset.theme||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light")}
