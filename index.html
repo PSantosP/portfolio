@@ -167,6 +167,20 @@ a{color:var(--accent-ink);text-decoration:none}
 #mathList .arch-ev li::before{color:var(--c-perf)}
 #mathList .arch:hover{border-color:color-mix(in srgb,var(--c-perf) 55%,var(--line))}
 
+.retros{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(max-width:760px){.retros{grid-template-columns:1fr}}
+.retro{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--rc);
+  border-radius:12px;padding:20px 22px;display:flex;flex-direction:column;gap:12px;transition:border-color .2s}
+.retro:hover{border-color:color-mix(in srgb,var(--rc) 55%,var(--line));border-left-color:var(--rc)}
+.retro h3{margin:0;font-size:1.02rem;font-weight:750;letter-spacing:-.01em;line-height:1.35;color:var(--ink)}
+.retro-row{display:grid;grid-template-columns:58px 1fr;gap:10px}
+.retro-row dt{font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;padding-top:3px;white-space:nowrap}
+.retro-row .then{color:var(--ink-faint)}
+.retro-row .now{color:var(--rc);font-weight:700}
+.retro-row dd{margin:0;font-size:.89rem;line-height:1.55}
+.retro-row dd.d-then{color:var(--ink-dim)}
+.retro-row dd.d-now{color:var(--ink);font-weight:500}
+
 .built{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 @media(max-width:700px){.built{grid-template-columns:1fr}}
 .bi{display:flex;gap:11px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);
@@ -589,6 +603,17 @@ finally
   </div>
 </section>
 
+<section id="retro">
+  <div class="wrap">
+    <div class="shead">
+      <span class="eyebrow">Retrospective · 그때와 지금</span>
+      <h2>되돌리고 다시 만들며 남은 것</h2>
+      <p>잘된 것만 적으면 홍보물이 됩니다. 실제로 <b style="color:var(--ink)">되돌리고, 오판하고, 다시 만든</b> 기록에서 남은 판단 기준입니다.</p>
+    </div>
+    <div class="retros" id="retroList"></div>
+  </div>
+</section>
+
 <section id="engine">
   <div class="wrap">
     <div class="shead">
@@ -766,6 +791,20 @@ const CPPT=[
  "<b>오브젝트 풀 오염·수명 버그</b> — 반환된 객체의 역참조를 추적해 근본 해결",
  "<b>네이티브 리소스 누수</b> — 관리 밖 자원(소켓·번들)의 해제 경로를 설계로 보장"
 ];
+const RETRO=[
+ {c:"var(--accent)",t:"추상화는 두 번째 구현부터",
+  then:"드론 스킬을 종류별로 각각 구현하다, 7종이 된 뒤에야 제네릭 베이스로 통합했습니다(약 770 LOC 감소). 통합 과정에서 한 종류에만 남아 있던 리소스 반환 누락 버그도 함께 발견했습니다.",
+  now:"<b>두 번째 유사 구현이 나오는 시점</b>을 추상화 신호로 봅니다. 복붙은 버그까지 복제하니까요. 다만 첫 구현부터의 추상화는 반대입니다 — 요구사항이 덜 드러난 상태의 추상화가 더 비쌌습니다."},
+ {c:"var(--c-refactor)",t:"소유권을 먼저 정한다",
+  then:"군중 배치에서 위치 결정 권한이 5곳에 분산돼 있었고, 각 지점을 개선하는 방식으로 대응하다 결국 단일 관리자(SSOT)로 재설계했습니다(죽은 코드 216줄 제거).",
+  now:"<b>“누가 이 상태의 주인인가”를 먼저 정하고</b> 시작합니다. 권한이 분산되면 각 지점을 아무리 똑똑하게 만들어도 정합성 버그는 남는다는 걸 확인했습니다."},
+ {c:"var(--c-fix)",t:"롤백 전에 원인을 분리한다",
+  then:"풀링된 오브젝트의 생명주기 최적화를 넣었다가 증상 제보를 받고 되돌렸습니다. 이후 재조사에서 그 증상은 <b>무관한 기존 이슈</b>였음이 밝혀져 다시 적용했습니다.",
+  now:"<b>증상 신고와 원인을 분리해 확인한 뒤</b> 롤백을 결정합니다. 무관한 변경을 되돌리며 같은 작업을 두 번 한 셈이었습니다."},
+ {c:"var(--c-feat)",t:"“왜 여기서만 터졌나”를 확인한다",
+  then:"궁극기 무한 재귀 크래시는 세 궁극기 <b>모두에 있던 결함</b>인데, 두 개는 발동 중 공격이 불가능해 우연히 드러나지 않았습니다.",
+  now:"재현 조건이 우연이면 <b>같은 결함이 다른 곳에 잠복해 있다는 신호</b>로 봅니다. 그래서 개별 수정이 아니라 계약(순수 배율만 허용)으로 막았습니다."}
+];
 const MATH=[
  {tag:"3D MATH",t:"기하 · 벡터 연산",
   d:"캐릭터 움직임과 판정은 대부분 벡터·각도 계산으로 귀결됩니다. 라이브러리에 맡기지 않고 직접 계산해야 했던 것들입니다.",
@@ -840,6 +879,13 @@ document.getElementById("builtList").innerHTML=BUILT.map(b=>`
  <div class="bi" style="--dom:var(--${b.d})">
    <span class="dot"></span><span><b>${b.t}</b><span>${b.s}</span></span>
  </div>`).join("");
+
+document.getElementById("retroList").innerHTML=RETRO.map(r=>`
+ <article class="retro" style="--rc:${r.c}">
+   <h3>${r.t}</h3>
+   <dl class="retro-row"><dt class="then">그때</dt><dd class="d-then">${r.then}</dd></dl>
+   <dl class="retro-row"><dt class="now">지금이면</dt><dd class="d-now">${r.now}</dd></dl>
+ </article>`).join("");
 
 document.getElementById("mathList").innerHTML=MATH.map(a=>`
  <article class="arch">
